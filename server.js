@@ -15,6 +15,9 @@ app.use(express.urlencoded({extended: true}));
 //parse incoming JSON data
 app.use(express.json());
 
+// route that access the css and js files for the page to load correctly.(middleware)
+app.use(express.static('public'));
+
 function filterByQuery(query, animalsArray) {
     let personalityTraitsArray = [];
     let filteredResults = animalsArray;
@@ -85,6 +88,26 @@ app.get('/api/animals/:id', (req, res) => {
     } else {
         res.json(404);
     }  
+});
+
+// route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+// route to serve animals.html
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+// route to serve zookeepers.html
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+// wildcard route, reroutes to homepage if an undefined route is requested
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.post('/api/animals', (req, res) => {
